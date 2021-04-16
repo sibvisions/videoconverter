@@ -1,4 +1,4 @@
-<project name="VisionX.VideoConverter" default="start.complete">
+<project name="VideoConverter" default="start.complete">
 
 	<!--
 	  *****************************************************************
@@ -6,7 +6,7 @@
 	  *****************************************************************
 	  -->
 
-	<description>VisionX VideoConverter plugin</description>
+	<description>VideoConverter plugin</description>
 
 	<!--
 	  *****************************************************************
