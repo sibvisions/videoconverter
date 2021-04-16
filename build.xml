@@ -1,0 +1,185 @@
+<project name="VisionX.VideoConverter" default="start.complete">
+
+	<!--
+	  *****************************************************************
+	  * information
+	  *****************************************************************
+	  -->
+
+	<description>VisionX VideoConverter plugin</description>
+
+	<!--
+	  *****************************************************************
+	  * global properties
+	  *****************************************************************
+	  -->
+
+	<property name="release.name"  value="videoconverter"/>
+
+	<property name="jar.name"      value="${release.name}.jar" />
+	
+	<property name="debug"         value="on"/>
+    <property name="debuglevel"    value="source,lines"/>
+	
+	<!--
+	  *****************************************************************
+	  * general properties
+	  *****************************************************************
+	  -->
+
+	<property name="build"         location="${basedir}/build" />
+    <property name="buildnumber"   location="${build}/buildnumber/" />
+ 	<property name="temp"          location="${build}/temp" />
+	<property name="release" 	   location="${build}/release" />
+
+	<property name="src"           location="${basedir}/src" />
+	<property name="libs"          location="${basedir}/libs" />
+	<property name="buildnumber"   location="${build}/buildnumber/" />
+
+	<property name="classes" 	   location="${temp}/classes" />
+	
+	<!-- 
+	  ***************************************************************** 
+	  * external taskdefinitions   
+	  ***************************************************************** 
+	  -->
+
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpath="${build}/ant-contrib.jar" />
+
+	<!-- 
+	  ***************************************************************** 
+	  * logging   
+	  ***************************************************************** 
+	  -->
+
+	<record name="${build}/build.log" />	
+	
+	<!--
+	  *****************************************************************
+	  * INTERNAL TASKS
+	  *****************************************************************
+	  -->
+
+	<target name="proxy.check">
+	  <stopwatch name="timer_proxy"/>
+	    
+	  <if>
+	    <not>
+	      <isset property="ci" />
+	    </not>
+	    <then>
+	      <typedef name="canreach" classname="com.sibvisions.addons.ant.CanReach" classpath="${buildnumber}/addons.jar" />
+
+	  	  <condition property="proxy.enabled">
+	  	    <and>
+	  	      <canreach host="10.0.0.1" port="3128"/>
+	  	    </and>
+	  	  </condition>
+	    </then>
+	  </if>
+	    
+	  <stopwatch name="timer_proxy" action="total"/>
+	</target>
+	  
+	<target name="proxy" depends="proxy.check" if="proxy.enabled">
+	  <stopwatch name="timer1"/>
+	    
+	  <property name="proxy.host" value="10.0.0.1"/>
+	  <property name="proxy.port" value="3128"/>
+	  <property name="proxy.user" value=""/>
+	  <property name="proxy.pass" value=""/>
+	      
+	  <setproxy proxyhost="${proxy.host}" proxyport="${proxy.port}" proxyuser="${proxy.user}" proxypassword="${proxy.password}"/>
+	    
+	  <stopwatch name="timer1" action="total"/>
+	</target>
+	
+    <!--  
+	  * cleanup tasks 
+	  -->
+	
+	<target name="clean.start">
+      <stopwatch name="timer2"/>
+
+	  <delete dir="${temp}" />
+	  <delete dir="${release}" />
+		
+	  <stopwatch name="timer2" action="total"/>
+	</target>
+	
+	<target name="clean.stop">
+      <stopwatch name="timer3"/>
+		
+	  <delete dir="${temp}" />
+		
+      <stopwatch name="timer3" action="total"/>
+	</target>
+	
+    <!-- 
+	  * compile, build tasks 
+	  -->
+	
+	<target name="compile">
+	  <stopwatch name="timer4"/>
+	  
+	  <mkdir dir="${classes}" />
+		
+	  <javac srcdir="${src}" destdir="${classes}" debug="${debug}" debuglevel="${debuglevel}" deprecation="on" includeantruntime="false" encoding="UTF-8">
+	    <classpath>
+	      <fileset dir="${libs}">
+	        <include name="*.jar" />
+	      </fileset>
+	    </classpath>
+	  </javac>
+		
+	  <!-- copy resource files -->
+	  <copy todir="${classes}">
+	    <fileset dir="${src}">
+	      <include name="**/**" />
+
+	      <exclude name="**/*.java" />
+	      <exclude name="**/package.html" />
+	      <exclude name="META-INF/**" />
+	    </fileset>
+	  </copy>
+		
+	  <stopwatch name="timer4" action="total"/>
+	</target>
+	
+	<target name="jar" depends="compile">
+	  <stopwatch name="timer5"/>
+		
+      <!-- define late because of the classpath -->
+	  <taskdef name="buildnr" classname="com.sibvisions.addons.ant.AntBuildNumber">
+	  	<classpath>
+	  	  <pathelement location="${buildnumber}/addons.jar"/>
+	  	  <pathelement path="${classes}"/>
+	      <fileset dir="${libs}">
+	        <include name="*.jar" />
+	      </fileset>
+	    </classpath>
+	  </taskdef>
+	  <buildnr buildfile="${buildnumber}/buildnr.properties" class="com.sibvisions.visionx.RecorderConverter" versionfield="VERSION" namefield="NAME"/> 
+		
+      <mkdir dir="${release}" />
+		
+	  <jar jarfile="${release}/${jar.name}" basedir="${classes}">
+		<manifest>
+	      <attribute name="Implementation-Title" value="${build.versionstring}${build.nightly}"/>
+	      <attribute name="Implementation-Version" value="b${build.number} ${build.date}${build.nightly}"/> 
+	      <attribute name="Implementation-Vendor" value="SIB Visions GmbH"/>
+	    </manifest>
+      </jar>
+		
+	  <stopwatch name="timer5" action="total"/>
+	</target>
+	
+	<!--
+	  *****************************************************************
+	  * PUBLIC START TASKS
+	  *****************************************************************
+	  -->
+	
+	<target name="start.complete" depends="clean.start, jar, clean.stop" description="Creates the release jar" />
+	
+</project>
