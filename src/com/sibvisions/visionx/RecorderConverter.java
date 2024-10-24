@@ -33,7 +33,7 @@ public class RecorderConverter
 	public static final String NAME = "Video Converter";
 
 	/** the version number. */
-	public static final String VERSION = "1.0";
+	public static final String VERSION = "1.0.1";
 	
 	/** the MP4 conversion profile. */
 	public static final String PROFILE_MP4 = "profile_mp4";
