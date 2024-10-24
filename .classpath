@@ -7,15 +7,13 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="libs/jave-core-3.1.1.jar"/>
-	<classpathentry kind="lib" path="libs/jave-nativebin-linux-arm32-3.1.1.jar"/>
-	<classpathentry kind="lib" path="libs/jave-nativebin-linux-arm64-3.1.1.jar"/>
-	<classpathentry kind="lib" path="libs/jave-nativebin-linux64-3.1.1.jar"/>
-	<classpathentry kind="lib" path="libs/jave-nativebin-win32-3.1.1.jar"/>
-	<classpathentry kind="lib" path="libs/jave-nativebin-win64-3.1.1.jar"/>
+	<classpathentry kind="lib" path="libs/jave-core-3.5.0.jar"/>
+	<classpathentry kind="lib" path="libs/jave-nativebin-linux64-3.5.0.jar"/>
+	<classpathentry kind="lib" path="libs/jave-nativebin-linux-arm64-3.5.0.jar"/>
+	<classpathentry kind="lib" path="libs/jave-nativebin-osx64-3.5.0.jar"/>
+	<classpathentry kind="lib" path="libs/jave-nativebin-osxm1-3.5.0.jar"/>
+	<classpathentry kind="lib" path="libs/jave-nativebin-win64-3.5.0.jar"/>
 	<classpathentry kind="lib" path="libs/slf4j-api-1.7.30.jar"/>
-	<classpathentry kind="lib" path="libs/jave-nativebin-linux32-3.1.1.jar"/>
-	<classpathentry kind="lib" path="libs/jave-nativebin-osx64-3.1.1.jar"/>
 	<classpathentry kind="lib" path="libs/slf4j-simple-1.7.30.jar"/>
 	<classpathentry kind="lib" path="libs/jvx.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
